@@ -40,7 +40,7 @@ native file_PrintAll()
 */
 
 #define MAX_RECORDS         (999)
-#define MAX_KEY_LENGTH      (32)
+#define MAX_KEY_LENGTH      (128)
 #define MAX_VAL_LENGTH      (256)
 #define MAX_RECORD_LENGTH   (MAX_KEY_LENGTH + MAX_VAL_LENGTH + 2)
 
@@ -58,52 +58,9 @@ enum
 static
 File:	ini_CurrentFile,
 		ini_Temp[MAX_RECORD_LENGTH],
-		ini_OsLineEndLen = 2,
-		ini_OsLineEndChar[5],
 bool:	ini_FileOpen,
 		ini_KeyData[MAX_RECORDS][MAX_KEY_LENGTH],
 		ini_ValData[MAX_RECORDS][MAX_VAL_LENGTH];
-
-
-/*==============================================================================
-
-	Operating system detection
-
-==============================================================================*/
-
-
-public OnGameModeInit()
-{
-	new type = LINUX;
-
-	fclose(fopen("windows", io_write));
-
-	if(fexist("WINDOWS"))
-		type = WINDOWS;
-
-	fremove("windows");
-
-	if(type == WINDOWS)
-	{
-		ini_OsLineEndLen = 2;
-		ini_OsLineEndChar = "\r\n";
-	}
-
-	else
-	{
-		ini_OsLineEndLen = 1;
-		ini_OsLineEndChar = "\n";
-	}
-
-	return CallLocalFunction("inifiles_OnGameModeInit", "");
-}
-#if defined _ALS_OnGameModeInit
-	#undef OnGameModeInit
-#else
-	#define _ALS_OnGameModeInit
-#endif
-#define OnGameModeInit inifiles_OnGameModeInit
-forward inifiles_OnGameModeInit();
 
 
 /*==============================================================================
@@ -144,6 +101,12 @@ stock file_Delete(filename[])
 
 stock file_Open(filename[])
 {
+	if(ini_FileOpen)
+	{
+		print("ERROR: file_Open: File already open.");
+		return 0;
+	}
+
 	if(!fexist(filename))
 	{
 		printf("ERROR: file_Open: File '%s' not found.", filename);
@@ -156,14 +119,20 @@ stock file_Open(filename[])
 
 	new
 		i,
-		delim;
+		delim,
+		endpos;
 
 	while(fread(ini_CurrentFile, ini_Temp) && (i < MAX_RECORDS))
 	{
-		if(strlen(ini_Temp) && strfind(ini_Temp, ini_OsLineEndChar) != -1)
-		{
-			strdel(ini_Temp, strlen(ini_Temp) - ini_OsLineEndLen, strlen(ini_Temp));
-		}
+		endpos = strfind(ini_Temp, "\r"); // if windows
+
+		if(endpos == -1) // if linux
+			endpos = strfind(ini_Temp, "\n");
+
+		if(endpos == -1) // single line file
+			endpos = strlen(ini_Temp);
+
+		ini_Temp[endpos] = EOS;
 
 		delim = strfind(ini_Temp, "=");
 
@@ -224,11 +193,10 @@ stock file_Save(filename[])
 		if(file_IsLineComment(i))
 		{
 			__strcpy(ini_Temp, ini_ValData[i], MAX_RECORD_LENGTH);
-			strcat(ini_Temp, ini_OsLineEndChar);
 		}
 		else
 		{
-			format(ini_Temp, MAX_RECORD_LENGTH, "%s = %s%s", ini_KeyData[i], ini_ValData[i], ini_OsLineEndChar);
+			format(ini_Temp, MAX_RECORD_LENGTH, "%s = %s\n", ini_KeyData[i], ini_ValData[i]);
 		}
 
 		fwrite(ini_CurrentFile, ini_Temp);
