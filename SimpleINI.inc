@@ -45,7 +45,6 @@ native file_PrintAll()
 #define MAX_RECORD_LENGTH   (MAX_KEY_LENGTH + MAX_VAL_LENGTH + 2)
 
 #define __isnull(%0)        (%0[0] == 0||(%0[0] == 1&&%0[1] == 0))
-#define __strcpy(%0,%1,%2)  strcat((%0[0] = '\0', %0), %1, %2)
 #define file_IncVal(%1,%2)  file_SetVal(%1, file_GetVal(%1) + %2)
 
 enum
@@ -119,33 +118,49 @@ stock file_Open(filename[])
 
 	new
 		i,
+		endline,
 		delim,
-		endpos;
+		offset;
 
 	while(fread(ini_CurrentFile, ini_Temp) && (i < MAX_RECORDS))
 	{
-		endpos = strfind(ini_Temp, "\r"); // if windows
+		endline = strfind(ini_Temp, "\r"); // if windows
 
-		if(endpos == -1) // if linux
-			endpos = strfind(ini_Temp, "\n");
+		if(endline == -1) // if linux
+			endline = strfind(ini_Temp, "\n");
 
-		if(endpos == -1) // single line file
-			endpos = strlen(ini_Temp);
+		if(endline == -1) // single line file
+			endline = strlen(ini_Temp);
 
-		ini_Temp[endpos] = EOS;
+		ini_Temp[endline] = EOS;
 
 		delim = strfind(ini_Temp, "=");
 
 		if(delim != -1)
 		{
-			__strcpy(ini_KeyData[i], ini_Temp, delim + 1);
-			__strcpy(ini_ValData[i], ini_Temp[delim + 1], MAX_VAL_LENGTH);
+			offset = 0;
+			while(offset > -delim)
+			{
+				if(ini_Temp[delim + (offset - 1)] != '=' && ini_Temp[delim + (offset - 1)] != ' ' && ini_Temp[delim + (offset - 1)] != '\t')
+					break;
 
-			if(ini_KeyData[i][delim - 1] == ' ')
-				strdel(ini_KeyData[i], delim - 1, delim);
+				offset--;
+			}
 
-			if(!ini_ValData[i][0])
-				strdel(ini_ValData[i], -1, 0);
+			__strcpy(ini_KeyData[i], ini_Temp, delim + offset + 1);
+
+			offset = 0;
+			while(offset < MAX_VAL_LENGTH)
+			{
+				if(ini_Temp[delim + (offset)] != '=' && ini_Temp[delim + (offset)] != ' ' && ini_Temp[delim + (offset)] != '\t')
+					break;
+
+				offset++;
+			}
+
+			__strcpy(ini_ValData[i], ini_Temp[delim + offset], MAX_VAL_LENGTH);
+
+			printf("['%s' : '%s']", ini_KeyData[i], ini_ValData[i]);
 		}
 		else
 		{
@@ -503,4 +518,10 @@ stock file_FindLine(key[])
 	}
 
 	return i;
+}
+
+stock __strcpy(dest[], const source[], maxlength=sizeof dest)
+{
+	dest[0] = EOS;
+	return strcat(dest, source, maxlength);
 }
