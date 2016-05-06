@@ -159,8 +159,6 @@ stock file_Open(filename[])
 			}
 
 			__strcpy(ini_ValData[i], ini_Temp[delim + offset], MAX_VAL_LENGTH);
-
-			printf("['%s' : '%s']", ini_KeyData[i], ini_ValData[i]);
 		}
 		else
 		{
@@ -211,7 +209,7 @@ stock file_Save(filename[])
 		}
 		else
 		{
-			format(ini_Temp, MAX_RECORD_LENGTH, "%s = %s\n", ini_KeyData[i], ini_ValData[i]);
+			format(ini_Temp, MAX_RECORD_LENGTH, "%s=%s\n", ini_KeyData[i], ini_ValData[i]);
 		}
 
 		fwrite(ini_CurrentFile, ini_Temp);
