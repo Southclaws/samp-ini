@@ -1,6 +1,6 @@
-# kvfile
+# samp-ini
 
-Key-Value File Reader/Writer
+INI-style Key-Value File Reader/Writer
 
 ---
 
@@ -11,7 +11,7 @@ Add to your `pawn.json`:
 ```json
 {
     "dependencies": [
-        "Southclaws/samp-kvfile"
+        "Southclaws/samp-ini"
     ]
 }
 ```
@@ -19,7 +19,7 @@ Add to your `pawn.json`:
 Include in source:
 
 ```pawn
-#include <kvfile>
+#include <ini>
 ```
 
 ## Tests
