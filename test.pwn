@@ -4,36 +4,27 @@
 #include "ini.inc"
 
 Test:OpenNew() {
-    new ret = ini_open("tests/OpenNew.ini");
-    ASSERT(ret == 0);
+    new open_ret = ini_open("OpenNew.ini");
+    ASSERT(open_ret == 0);
 
-    ret = ini_close();
-    ASSERT(ret == 0);
-}
-
-Test:OpenExisting() {
-    new ret = ini_open("tests/OpenExisting.ini");
-    ASSERT(ret == 0);
-
-    ret = ini_close();
-    ASSERT(ret == 0);
+    new close_ret = ini_close();
+    ASSERT(close_ret == 0);
 }
 
 Test:OpenSetCommit() {
-    new ret = ini_open("tests/OpenSetIntCommit.ini");
-    ASSERT(ret == 0);
+    new open_ret = ini_open("OpenSetIntCommit.ini");
+    ASSERT(open_ret == 0);
 
     ini_set_str("key", "value");
     ini_set_int("key", 1);
     ini_set_float("key", 1.1);
 
-    ret = ini_commit();
-    ASSERT(ret == 0);
+    new commit_ret = ini_commit();
+    ASSERT(commit_ret == 0);
 }
 
-
 Test:OpenGetClose() {
-    new ret = ini_open("tests/OpenSetIntCommit.ini");
+    new ret = ini_open("OpenSetIntCommit.ini");
     ASSERT(ret == 0);
 
     new str[128];

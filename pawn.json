@@ -1,4 +1,6 @@
 {
+    "user": "Southclaws",
+    "repo": "samp-ini",
     "entry": "test.pwn",
     "output": "test.amx",
     "dependencies": [

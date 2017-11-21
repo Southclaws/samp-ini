@@ -24,6 +24,7 @@ enum {
 	INI_ERR_NOT_EXISTS,
 	INI_ERR_OPEN,
 	INI_ERR_NOT_OPEN,
+	INI_ERR_IO_FAIL
 }
 
 static
@@ -68,6 +69,10 @@ stock ini_open(filename[], len = sizeof filename) {
 
 	if(fexist(filename)) {
 		handle = fopen(filename, io_read);
+		if(!handle) {
+			return INI_ERR_IO_FAIL;
+		}
+
 		ret = ini_parse(handle, ini_KeyData, ini_ValData);
 		fclose(handle);
 	}
@@ -79,15 +84,14 @@ stock ini_open(filename[], len = sizeof filename) {
 }
 
 stock ini_commit() {
-	if(!fexist(ini_CurrentFileName)) {
-		return INI_ERR_NOT_EXISTS;
-	}
-
 	if(!ini_FileOpen) {
 		return INI_ERR_NOT_OPEN;
 	}
 
 	new File:handle = fopen(ini_CurrentFileName, io_write);
+	if(!handle) {
+		return INI_ERR_IO_FAIL;
+	}
 
 	new ret = ini_write(handle, ini_KeyData, ini_ValData);
 
