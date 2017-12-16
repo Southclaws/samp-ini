@@ -1,13 +1,12 @@
 // parse the given file handle as key=value format writing output to the given destinations
-ini_parse(File:handle, keys[MAX_RECORDS][MAX_KEY_LENGTH], values[MAX_RECORDS][MAX_VAL_LENGTH]) {
+ini_parse(File:handle, cache[MAX_RECORDS][E_CACHE_STRUCT], &records) {
 	new
-		i,
 		endline,
 		delim,
 		offset,
 		buffer[MAX_RECORD_LENGTH];
 
-	while(fread(handle, buffer) && (i < MAX_RECORDS)) {
+	while(fread(handle, buffer) && (records < MAX_RECORDS)) {
 
 		// Checks if the file has CRLF, LF or is just a single-line file.
 		// first, search for a \r since with CRLF files they come first
@@ -37,7 +36,7 @@ ini_parse(File:handle, keys[MAX_RECORDS][MAX_KEY_LENGTH], values[MAX_RECORDS][MA
 				offset--;
 			}
 
-			_ini_strcpy(keys[i], buffer, delim + offset + 1);
+			_ini_strcpy(cache[records][E_CACHE_KEY], buffer, delim + offset + 1);
 
 			offset = 0;
 			while(offset < MAX_VAL_LENGTH) {
@@ -48,13 +47,15 @@ ini_parse(File:handle, keys[MAX_RECORDS][MAX_KEY_LENGTH], values[MAX_RECORDS][MA
 				offset++;
 			}
 
-			_ini_strcpy(values[i], buffer[delim + offset], MAX_VAL_LENGTH);
+			_ini_strcpy(cache[records][E_CACHE_VALUE], buffer[delim + offset], MAX_VAL_LENGTH);
 		} else {
-			keys[i][0] = 0;
-			_ini_strcpy(values[i], buffer, MAX_VAL_LENGTH);
+			cache[records][E_CACHE_KEY][0] = 0;
+			_ini_strcpy(cache[records][E_CACHE_VALUE], buffer, MAX_VAL_LENGTH);
 		}
 
-		i++;
+		cache[records][E_CACHE_ORDER] = records;
+
+		records++;
 	}
 
 	return 0;

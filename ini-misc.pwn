@@ -1,8 +1,3 @@
-#if defined _strcpy_included
-	#endinput
-#endif
-#define _strcpy_included
-
 // strcpy copies a string from source to destination
 _ini_strcpy(dest[], const source[], maxlength = sizeof dest) {
 	dest[0] = EOS;
