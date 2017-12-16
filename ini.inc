@@ -1,22 +1,13 @@
-/*==============================================================================
-
-
-	Southclaw's INI File System
-
-		Do whatever you want with it
-		But keep my name on it :)
-
-
-==============================================================================*/
-
+#if defined _ini_included
+	#endinput
+#endif
+#define _ini_included
 
 #define MAX_FILE_NAME       (256)
 #define MAX_RECORDS         (999)
 #define MAX_KEY_LENGTH      (128)
 #define MAX_VAL_LENGTH      (256)
 #define MAX_RECORD_LENGTH   (MAX_KEY_LENGTH + MAX_VAL_LENGTH + 2)
-
-#define __isnull(%0)        (%0[0] == 0||(%0[0] == 1&&%0[1] == 0))
 
 // Error values are non-zero positive
 enum {
@@ -26,13 +17,6 @@ enum {
 	INI_ERR_NOT_OPEN,
 	INI_ERR_IO_FAIL
 }
-
-static
-		ini_CurrentFileName[MAX_FILE_NAME],
-bool:	ini_FileOpen,
-		ini_KeyData[MAX_RECORDS][MAX_KEY_LENGTH],
-		ini_ValData[MAX_RECORDS][MAX_VAL_LENGTH];
-
 
 forward ini_open(filename[], len = sizeof filename);
 forward ini_commit();
@@ -50,7 +34,14 @@ forward file_RemoveKey(key[]);
 forward file_IsKey(key[]);
 
 
-#include "strcpy.pwn"
+static
+	ini_CurrentFileName[MAX_FILE_NAME],
+	bool:ini_FileOpen,
+	ini_KeyData[MAX_RECORDS][MAX_KEY_LENGTH],
+	ini_ValData[MAX_RECORDS][MAX_VAL_LENGTH];
+
+
+#include "util.pwn"
 #include "ini-parser.pwn"
 #include "ini-writer.pwn"
 #include "ini-access-get.pwn"
@@ -77,7 +68,7 @@ stock ini_open(filename[], len = sizeof filename) {
 		fclose(handle);
 	}
 
-	ini_strcpy(ini_CurrentFileName, filename, len);
+	_ini_strcpy(ini_CurrentFileName, filename, len);
 	ini_FileOpen = true;
 
 	return ret;

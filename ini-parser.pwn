@@ -1,6 +1,4 @@
-#include "strcpy.pwn"
-
-
+// parse the given file handle as key=value format writing output to the given destinations
 ini_parse(File:handle, keys[MAX_RECORDS][MAX_KEY_LENGTH], values[MAX_RECORDS][MAX_VAL_LENGTH]) {
 	new
 		i,
@@ -39,7 +37,7 @@ ini_parse(File:handle, keys[MAX_RECORDS][MAX_KEY_LENGTH], values[MAX_RECORDS][MA
 				offset--;
 			}
 
-			ini_strcpy(keys[i], buffer, delim + offset + 1);
+			_ini_strcpy(keys[i], buffer, delim + offset + 1);
 
 			offset = 0;
 			while(offset < MAX_VAL_LENGTH) {
@@ -50,10 +48,10 @@ ini_parse(File:handle, keys[MAX_RECORDS][MAX_KEY_LENGTH], values[MAX_RECORDS][MA
 				offset++;
 			}
 
-			ini_strcpy(values[i], buffer[delim + offset], MAX_VAL_LENGTH);
+			_ini_strcpy(values[i], buffer[delim + offset], MAX_VAL_LENGTH);
 		} else {
 			keys[i][0] = 0;
-			ini_strcpy(values[i], buffer, MAX_VAL_LENGTH);
+			_ini_strcpy(values[i], buffer, MAX_VAL_LENGTH);
 		}
 
 		i++;
