@@ -30,11 +30,11 @@ forward ini_isOpen();
 forward ini_isKey(key[]);
 forward ini_remove(key[]);
 
-forward ini_getStr(key[], dest[], len = sizeof(dest));
+forward ini_getString(key[], dest[], len = sizeof(dest));
 forward ini_getInt(key[], &dest);
 forward ini_getFloat(key[], &Float:dest);
 
-forward ini_setStr(key[], value[]);
+forward ini_setString(key[], value[]);
 forward ini_setInt(key[], value);
 forward ini_setFloat(key[], Float:value);
 

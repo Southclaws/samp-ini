@@ -101,3 +101,87 @@ Test:SetExistingInt() {
 
 	fremove("SetNewInt.ini");
 }
+
+Test:SetNewFloat() {
+	printf("\n\n- SetNewFloat\n\n");
+
+	ASSERT(ini_open("SetNewFloat.ini") == 0);
+	ASSERT(ini_setFloat("key", 1.5) == 0);
+	ASSERT(ini_commit() == 0);
+
+	ASSERT(fexist("SetNewFloat.ini") == 1);
+
+	new Float:val;
+
+	ASSERT(ini_open("SetNewFloat.ini") == 0);
+	ASSERT(ini_getFloat("key", val) == 0);
+	ASSERT(val == 1.5);
+	ASSERT(ini_close() == 0);
+
+	fremove("SetNewFloat.ini");
+}
+
+Test:SetExistingFloat() {
+	printf("\n\n- SetExistingFloat\n\n");
+
+	ASSERT(ini_open("SetExistingFloat.ini") == 0);
+	ASSERT(ini_setFloat("key", 1.5) == 0);
+	ASSERT(ini_commit() == 0);
+
+	ASSERT(fexist("SetExistingFloat.ini") == 1);
+
+	ASSERT(ini_open("SetExistingFloat.ini") == 0);
+	ASSERT(ini_setFloat("key", 1000.5) == 0);
+	ASSERT(ini_commit() == 0);
+
+	new Float:val;
+
+	ASSERT(ini_open("SetExistingFloat.ini") == 0);
+	ASSERT(ini_getFloat("key", val) == 0);
+	ASSERT(val == 1000.5);
+	ASSERT(ini_close() == 0);
+
+	fremove("SetNewFloat.ini");
+}
+
+Test:SetNewString() {
+	printf("\n\n- SetNewString\n\n");
+
+	ASSERT(ini_open("SetNewString.ini") == 0);
+	ASSERT(ini_setString("key", "Value") == 0);
+	ASSERT(ini_commit() == 0);
+
+	ASSERT(fexist("SetNewString.ini") == 1);
+
+	new val[128];
+
+	ASSERT(ini_open("SetNewString.ini") == 0);
+	ASSERT(ini_getString("key", val) == 0);
+	ASSERT(strcmp(val, "Value") == 0);
+	ASSERT(ini_close() == 0);
+
+	fremove("SetNewString.ini");
+}
+
+Test:SetExistingString() {
+	printf("\n\n- SetExistingString\n\n");
+
+	ASSERT(ini_open("SetExistingString.ini") == 0);
+	ASSERT(ini_setString("key", "Value") == 0);
+	ASSERT(ini_commit() == 0);
+
+	ASSERT(fexist("SetExistingString.ini") == 1);
+
+	ASSERT(ini_open("SetExistingString.ini") == 0);
+	ASSERT(ini_setString("key", "Valyew") == 0);
+	ASSERT(ini_commit() == 0);
+
+	new val[128];
+
+	ASSERT(ini_open("SetExistingString.ini") == 0);
+	ASSERT(ini_getString("key", val) == 0);
+	ASSERT(strcmp(val, "Valyew") == 0);
+	ASSERT(ini_close() == 0);
+
+	fremove("SetNewString.ini");
+}
