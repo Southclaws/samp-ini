@@ -7,7 +7,6 @@
         "Southclaws/samp-stdlib",
         "Southclaws/samp-logger",
         "Zeex/amx_assembly",
-        "Misiur/YSI-Includes",
-        "oscar-broman/md-sort"
+        "Misiur/YSI-Includes"
     ]
 }

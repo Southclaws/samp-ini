@@ -11,11 +11,17 @@ stock ini_getInt(key[], &dest) {
 		return INI_ERR_NOT_OPEN;
 	}
 
-	if(_ini_getIdx(key, ini_cache, ini_recordsRead) == -1) {
+	new idx = _ini_getIdx(key, ini_cache, ini_recordsRead);
+
+	if(idx == -1) {
 		return INI_ERR_NO_KEY;
-	} else {
-		dest = strval(ini_cache[ini_recordsAdded][E_CACHE_VALUE]);
 	}
+
+	dbg("ini", "interpreting value as int",
+		_i("idx", idx),
+		_s("value", ini_cache[idx][E_CACHE_VALUE]));
+
+	dest = strval(ini_cache[idx][E_CACHE_VALUE]);
 
 	return 0;
 }

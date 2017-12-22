@@ -1,5 +1,5 @@
 // parse the given file handle as key=value format writing output to the given destinations
-ini_parse(File:handle, cache[MAX_RECORDS][E_CACHE_STRUCT], &records) {
+ini_parse(File:handle, &records) {
 	new
 		endline,
 		delim,
@@ -29,33 +29,41 @@ ini_parse(File:handle, cache[MAX_RECORDS][E_CACHE_STRUCT], &records) {
 		if(delim != -1) {
 			offset = 0;
 			while(offset > -delim) {
-				if(buffer[delim + (offset - 1)] != '=' && buffer[delim + (offset - 1)] != ' ' && buffer[delim + (offset - 1)] != '\t') {
-					break;
+				if(
+					buffer[delim + (offset - 1)] != '=' && // if the char is not the delimiter
+					buffer[delim + (offset - 1)] != ' ' && // and it's not whitespce
+					buffer[delim + (offset - 1)] != '\t' // or a tab,
+				) {
+					break; // we have the offset from the delimiter to the actual key
 				}
 
 				offset--;
 			}
 
-			_ini_strcpy(cache[records][E_CACHE_KEY], buffer, delim + offset + 1);
+			_ini_strcpy(ini_cache[records][E_CACHE_KEY], buffer, delim + offset + 1);
 
 			offset = 0;
 			while(offset < MAX_VAL_LENGTH) {
-				if(buffer[delim + (offset)] != '=' && buffer[delim + (offset)] != ' ' && buffer[delim + (offset)] != '\t') {
+				if(
+					buffer[delim + (offset)] != '=' &&
+					buffer[delim + (offset)] != ' ' &&
+					buffer[delim + (offset)] != '\t'
+				) {
 					break;
 				}
 
 				offset++;
 			}
 
-			_ini_strcpy(cache[records][E_CACHE_VALUE], buffer[delim + offset], MAX_VAL_LENGTH);
-		} else {
-			cache[records][E_CACHE_KEY][0] = 0;
-			_ini_strcpy(cache[records][E_CACHE_VALUE], buffer, MAX_VAL_LENGTH);
+			_ini_strcpy(ini_cache[records][E_CACHE_VALUE], buffer[delim + offset], MAX_VAL_LENGTH);
+
+			dbg("ini", "read record",
+				_i("record", records),
+				_s("key", ini_cache[records][E_CACHE_KEY]),
+				_s("value", ini_cache[records][E_CACHE_VALUE]));
+
+			records++;
 		}
-
-		cache[records][E_CACHE_ORDER] = records;
-
-		records++;
 	}
 
 	return 0;

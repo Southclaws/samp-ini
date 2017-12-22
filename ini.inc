@@ -5,7 +5,6 @@
 
 #include <a_samp>
 #include <logger>
-#include <md-sort>
 
 
 #define MAX_FILE_NAME       (256)
@@ -42,7 +41,6 @@ forward ini_setFloat(key[], Float:value);
 enum E_CACHE_STRUCT {
 	E_CACHE_KEY[MAX_KEY_LENGTH],
 	E_CACHE_VALUE[MAX_VAL_LENGTH],
-	E_CACHE_ORDER,
 	E_CACHE_DELETED
 }
 
@@ -61,24 +59,24 @@ new
 
 stock ini_open(filename[], len = sizeof filename) {
 	if(ini_fileOpen) {
+		err("attempt to open ini while file already open", _s("filename", filename));
 		return INI_ERR_OPEN;
 	}
 
-	new
-		File:handle,
-		ret;
+	new ret;
 
 	if(fexist(filename)) {
-		handle = fopen(filename, io_read);
+		new File:handle = fopen(filename, io_read);
 		if(!handle) {
+			err("failed to open file for reading", _s("filename", ini_fileName));
 			return INI_ERR_IO_FAIL;
 		}
 
-		ret = ini_parse(handle, ini_cache, ini_recordsRead);
+		ret = ini_parse(handle, ini_recordsRead);
 		fclose(handle);
+	} else {
+		ini_recordsRead = 0;
 	}
-
-	SortDeepArray(ini_cache, E_CACHE_KEY);
 
 	_ini_strcpy(ini_fileName, filename, len);
 	ini_fileOpen = true;
@@ -88,17 +86,22 @@ stock ini_open(filename[], len = sizeof filename) {
 
 stock ini_commit() {
 	if(!ini_fileOpen) {
+		err("attempt to commit ini with no open file");
 		return INI_ERR_NOT_OPEN;
 	}
 
 	new File:handle = fopen(ini_fileName, io_write);
 	if(!handle) {
+		err("failed to open file for writing", _s("filename", ini_fileName));
 		return INI_ERR_IO_FAIL;
 	}
 
-	SortDeepArray(ini_cache, E_CACHE_ORDER);
+	dbg("ini", "writing records",
+		_i("read", ini_recordsRead),
+		_i("added", ini_recordsAdded));
 
-	new ret = ini_write(handle, ini_cache, ini_recordsRead + ini_recordsAdded);
+	new ret = ini_write(handle, ini_recordsRead + ini_recordsAdded);
+	fclose(handle);
 
 	ini_close();
 
@@ -111,7 +114,8 @@ stock ini_close() {
 	}
 
 	ini_fileOpen = false;
-
+	ini_recordsRead = 0;
+	ini_recordsAdded = 0;
 	return 0;
 }
 
@@ -133,6 +137,48 @@ stock ini_remove(key[]) {
 	}
 
 	return 0;
+}
+
+_ini_sortByKey(left, right) {
+	new
+		tmp_left = left,
+		tmp_right = right,
+		pivot = (left + right) / 2;
+
+	while(tmp_left <= tmp_right) {
+		while(strcmp(ini_cache[tmp_left][E_CACHE_KEY], ini_cache[pivot][E_CACHE_KEY]) < 0) {
+			tmp_left++;
+		}
+		while(strcmp(ini_cache[tmp_left][E_CACHE_KEY], ini_cache[pivot][E_CACHE_KEY]) > 0) {
+			tmp_right--;
+		}
+		if(tmp_left <= tmp_right) {
+			_ini_swap(tmp_left, tmp_right);
+			tmp_left++;
+			tmp_right--;
+		}
+	}
+
+	if(left < tmp_right) {
+		_ini_sortByKey(left, tmp_right);
+	}
+
+	if(tmp_left < right) {
+		_ini_sortByKey(tmp_left, right);
+	}
+}
+
+_ini_swap(left, right) {
+	new tmp[E_CACHE_STRUCT];
+
+	_ini_strcpy(tmp[E_CACHE_KEY], ini_cache[left][E_CACHE_KEY], MAX_KEY_LENGTH);
+	_ini_strcpy(tmp[E_CACHE_VALUE], ini_cache[left][E_CACHE_VALUE], MAX_VAL_LENGTH);
+
+	_ini_strcpy(ini_cache[left][E_CACHE_KEY], ini_cache[right][E_CACHE_KEY], MAX_KEY_LENGTH);
+	_ini_strcpy(ini_cache[left][E_CACHE_VALUE], ini_cache[right][E_CACHE_VALUE], MAX_VAL_LENGTH);
+
+	_ini_strcpy(ini_cache[right][E_CACHE_KEY], ini_cache[left][E_CACHE_KEY], MAX_KEY_LENGTH);
+	_ini_strcpy(ini_cache[right][E_CACHE_VALUE], ini_cache[left][E_CACHE_VALUE], MAX_VAL_LENGTH);
 }
 
 _ini_getIdx(key[], const cache[MAX_RECORDS][E_CACHE_STRUCT], records) {
