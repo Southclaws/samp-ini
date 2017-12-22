@@ -72,6 +72,7 @@ Test:SetNewInt() {
 	new int;
 
 	ASSERT(ini_open("SetNewInt.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_getInt("key", int) == 0);
 	ASSERT(int == 1);
 	ASSERT(ini_close() == 0);
@@ -89,17 +90,19 @@ Test:SetExistingInt() {
 	ASSERT(fexist("SetExistingInt.ini") == 1);
 
 	ASSERT(ini_open("SetExistingInt.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_setInt("key", 1000) == 0);
 	ASSERT(ini_commit() == 0);
 
 	new int;
 
 	ASSERT(ini_open("SetExistingInt.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_getInt("key", int) == 0);
 	ASSERT(int == 1000);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetNewInt.ini");
+	fremove("SetExistingInt.ini");
 }
 
 Test:SetNewFloat() {
@@ -114,6 +117,7 @@ Test:SetNewFloat() {
 	new Float:val;
 
 	ASSERT(ini_open("SetNewFloat.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_getFloat("key", val) == 0);
 	ASSERT(val == 1.5);
 	ASSERT(ini_close() == 0);
@@ -131,17 +135,19 @@ Test:SetExistingFloat() {
 	ASSERT(fexist("SetExistingFloat.ini") == 1);
 
 	ASSERT(ini_open("SetExistingFloat.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_setFloat("key", 1000.5) == 0);
 	ASSERT(ini_commit() == 0);
 
 	new Float:val;
 
 	ASSERT(ini_open("SetExistingFloat.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_getFloat("key", val) == 0);
 	ASSERT(val == 1000.5);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetNewFloat.ini");
+	fremove("SetExistingFloat.ini");
 }
 
 Test:SetNewString() {
@@ -156,6 +162,7 @@ Test:SetNewString() {
 	new val[128];
 
 	ASSERT(ini_open("SetNewString.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_getString("key", val) == 0);
 	ASSERT(strcmp(val, "Value") == 0);
 	ASSERT(ini_close() == 0);
@@ -179,9 +186,30 @@ Test:SetExistingString() {
 	new val[128];
 
 	ASSERT(ini_open("SetExistingString.ini") == 0);
+	ASSERT(ini_isKey("key") == 1);
 	ASSERT(ini_getString("key", val) == 0);
 	ASSERT(strcmp(val, "Valyew") == 0);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetNewString.ini");
+	fremove("SetExistingString.ini");
+}
+
+Test:SetAndDelete() {
+	printf("\n\n- SetAndDelete\n\n");
+
+	ASSERT(ini_open("SetAndDelete.ini") == 0);
+	ASSERT(ini_setString("key", "Value") == 0);
+	ASSERT(ini_commit() == 0);
+
+	ASSERT(fexist("SetAndDelete.ini") == 1);
+
+	ASSERT(ini_open("SetAndDelete.ini") == 0);
+	ASSERT(ini_remove("key") == 0);
+	ASSERT(ini_commit() == 0);
+
+	ASSERT(ini_open("SetAndDelete.ini") == 0);
+	ASSERT(ini_isKey("key") == 0);
+	ASSERT(ini_close() == 0);
+
+	fremove("SetAndDelete.ini");
 }

@@ -56,6 +56,7 @@ ini_parse(File:handle, &records) {
 			}
 
 			_ini_strcpy(ini_cache[records][E_CACHE_VALUE], buffer[delim + offset], MAX_VAL_LENGTH);
+			ini_cache[records][E_CACHE_DELETED] = false;
 
 			dbg("ini", "read record",
 				_i("record", records),

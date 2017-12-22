@@ -112,6 +112,7 @@ stock ini_close() {
 	ini_fileOpen = false;
 	ini_recordsRead = 0;
 	ini_recordsAdded = 0;
+
 	return 0;
 }
 
@@ -120,17 +121,25 @@ stock ini_isOpen() {
 }
 
 stock ini_isKey(key[]) {
-	if(!ini_is_open()) {
+	if(!ini_isOpen()) {
 		return false;
 	}
 
-	return false;
+	return _ini_getIdx(key, ini_cache, ini_recordsRead) != -1;
 }
 
 stock ini_remove(key[]) {
-	if(!ini_is_open()) {
+	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}
+
+	new idx = _ini_getIdx(key, ini_cache, ini_recordsRead);
+
+	if(idx == -1) {
+		return INI_ERR_NO_KEY;
+	}
+
+	ini_cache[idx][E_CACHE_DELETED] = true;
 
 	return 0;
 }
