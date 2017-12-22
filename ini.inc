@@ -96,10 +96,6 @@ stock ini_commit() {
 		return INI_ERR_IO_FAIL;
 	}
 
-	dbg("ini", "writing records",
-		_i("read", ini_recordsRead),
-		_i("added", ini_recordsAdded));
-
 	new ret = ini_write(handle, ini_recordsRead + ini_recordsAdded);
 	fclose(handle);
 

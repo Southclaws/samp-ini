@@ -12,13 +12,7 @@ ini_write(File:handle, records) {
 
 	new buffer[MAX_RECORD_LENGTH];
 
-	dbg("ini", "writing cached records", _i("records", records));
 	for(new i; i < records; ++i) {
-		dbg("ini", "record",
-			_i("index", i),
-			_s("key", ini_cache[i][E_CACHE_KEY]),
-			_s("value", ini_cache[i][E_CACHE_VALUE]));
-
 		if(_ini_isNull(ini_cache[i][E_CACHE_KEY]) || _ini_isNull(ini_cache[i][E_CACHE_VALUE])) {
 			continue;
 		}
@@ -33,8 +27,7 @@ ini_write(File:handle, records) {
 		dbg("ini", "wrote record",
 			_i("index", i),
 			_s("key", ini_cache[i][E_CACHE_KEY]),
-			_s("value", ini_cache[i][E_CACHE_VALUE]),
-			_s("buffer", buffer));
+			_s("value", ini_cache[i][E_CACHE_VALUE]));
 	}
 
 	return 0;
