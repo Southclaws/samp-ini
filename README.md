@@ -1,37 +1,33 @@
 # samp-ini
 
-INI-style Key-Value File Reader/Writer
+A super simple and fast ini reader and writer Pawn package.
 
----
+Not as feature rich as y_ini but has a simpler API. Suitable for configuration, cookies, small user systems, etc.
 
 ## Installation
 
-Add to your `pawn.json`:
+Simply install to your project:
 
-```json
-{
-    "dependencies": [
-        "Southclaws/samp-ini"
-    ]
-}
+```bash
+sampctl package install Southclaws/samp-ini
 ```
 
-Include in source:
+Include in your code and begin using the library:
 
 ```pawn
 #include <ini>
 ```
 
-## Tests
+## Usage
 
-You can run tests with `sampctl`:
+(todo: documentation)
 
-```pawn
-sampctl project run
+## Testing
+
+To test, simply run the package:
+
+```bash
+sampctl package run
 ```
 
-If you're on OSX, you can use a container runtime:
-
-```pawn
-sampctl project run --container
-```
+And observe the y_testing unit test output
