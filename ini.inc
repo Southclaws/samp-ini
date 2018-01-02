@@ -66,15 +66,18 @@ stock ini_open(filename[], len = sizeof filename) {
 	new ret;
 
 	if(fexist(filename)) {
+		dbg("ini", "opened existing file", _s("filename", filename));
+
 		new File:handle = fopen(filename, io_read);
 		if(!handle) {
-			err("failed to open file for reading", _s("filename", ini_fileName));
+			err("failed to open file for reading", _s("filename", filename));
 			return INI_ERR_IO_FAIL;
 		}
 
 		ret = ini_parse(handle, ini_recordsRead);
 		fclose(handle);
 	} else {
+		dbg("ini", "opened new file", _s("filename", filename));
 		ini_recordsRead = 0;
 	}
 
@@ -99,6 +102,8 @@ stock ini_commit() {
 	new ret = ini_write(handle, ini_recordsRead + ini_recordsAdded);
 	fclose(handle);
 
+	dbg("ini", "comitted file");
+
 	ini_close();
 
 	return ret;
@@ -112,6 +117,8 @@ stock ini_close() {
 	ini_fileOpen = false;
 	ini_recordsRead = 0;
 	ini_recordsAdded = 0;
+
+	dbg("ini", "closed file");
 
 	return 0;
 }
@@ -184,6 +191,12 @@ _ini_swap(left, right) {
 
 	_ini_strcpy(ini_cache[right][E_CACHE_KEY], ini_cache[left][E_CACHE_KEY], MAX_KEY_LENGTH);
 	_ini_strcpy(ini_cache[right][E_CACHE_VALUE], ini_cache[left][E_CACHE_VALUE], MAX_VAL_LENGTH);
+
+	if(ini_cache[left][E_CACHE_DELETED] != ini_cache[right][E_CACHE_DELETED]) {
+		ini_cache[left][E_CACHE_DELETED] ^= ini_cache[right][E_CACHE_DELETED];
+		ini_cache[right][E_CACHE_DELETED] ^= ini_cache[left][E_CACHE_DELETED];
+		ini_cache[left][E_CACHE_DELETED] ^= ini_cache[right][E_CACHE_DELETED];
+	}
 }
 
 _ini_getIdx(key[], const cache[MAX_RECORDS][E_CACHE_STRUCT], records) {
@@ -212,4 +225,17 @@ _ini_getIdx(key[], const cache[MAX_RECORDS][E_CACHE_STRUCT], records) {
 	}
 
 	return -1;
+}
+
+_ini_printCache(message[]) {
+	log(message);
+	log("begin ini cache");
+	for(new i = 0, j = ini_recordsRead + ini_recordsAdded; i < j; ++i) {
+		log("--record",
+			_i("index", i),
+			_i("deleted", ini_cache[i][E_CACHE_DELETED]),
+			_s("key", ini_cache[i][E_CACHE_KEY]),
+			_s("value", ini_cache[i][E_CACHE_VALUE]));
+	}
+	log("end ini cache");
 }
