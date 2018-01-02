@@ -1,6 +1,6 @@
 # samp-ini
 
-[![https://shields.southcla.ws/badge/sampctl-samp--ini-2f2f2f.svg?style=for-the-badge](https://shields.southcla.ws/badge/sampctl-samp--ini-2f2f2f.svg?style=for-the-badge)](https://github.com/Southclaws/samp-ini) [![Travis](https://shields.southcla.ws/travis/Southclaws/samp-ini.svg)](https://travis-ci.org/Southclaws/samp-ini)
+[![GitHub](https://shields.southcla.ws/badge/sampctl-samp--ini-2f2f2f.svg?style=for-the-badge)](https://github.com/Southclaws/samp-ini) [![Travis](https://shields.southcla.ws/travis/Southclaws/samp-ini.svg?style=for-the-badge)](https://travis-ci.org/Southclaws/samp-ini)
 
 A super simple and fast ini reader and writer Pawn package.
 
