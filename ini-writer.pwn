@@ -10,14 +10,23 @@ ini_write(File:handle, records) {
 		return 1;
 	}
 
+	dbg("ini", "writing ini", _i("records", records));
+
 	new buffer[MAX_RECORD_LENGTH];
 
 	for(new i; i < records; ++i) {
-		if(_ini_isNull(ini_cache[i][E_CACHE_KEY]) || _ini_isNull(ini_cache[i][E_CACHE_VALUE])) {
+		if(_ini_isNull(ini_cache[i][E_CACHE_KEY])) {
+			dbg("ini", "skip write: key null", _i("index", i), _s("value", ini_cache[i][E_CACHE_KEY]));
+			continue;
+		}
+
+		if(_ini_isNull(ini_cache[i][E_CACHE_VALUE])) {
+			dbg("ini", "skip write: value null", _i("index", i), _s("key", ini_cache[i][E_CACHE_VALUE]));
 			continue;
 		}
 
 		if(ini_cache[i][E_CACHE_DELETED]) {
+			dbg("ini", "skip write: deleted", _i("index", i), _s("key", ini_cache[i][E_CACHE_KEY]));
 			continue;
 		}
 
