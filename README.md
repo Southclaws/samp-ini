@@ -1,5 +1,7 @@
 # samp-ini
 
+![https://shields.southcla.ws/badge/sampctl-samp--ini-2f2f2f.svg?style=for-the-badge](https://shields.southcla.ws/badge/sampctl-samp--ini-2f2f2f.svg?style=for-the-badge)
+
 A super simple and fast ini reader and writer Pawn package.
 
 Not as feature rich as y_ini but has a simpler API. Suitable for configuration, cookies, small user systems, etc.
