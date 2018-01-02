@@ -7,4 +7,5 @@ install:
 script:
 - sampctl package ensure
 - sampctl package build
-- sampctl package run
+# removed until unit-test support is added to sampctl
+# - sampctl package run
