@@ -23,7 +23,7 @@ enum {
 	INI_ERR_NO_KEY
 }
 
-forward ini_open(filename[], len = sizeof filename);
+forward ini_open(filename[]);
 forward ini_commit();
 forward ini_close();
 forward ini_isOpen();
@@ -57,7 +57,7 @@ new
 #include "ini-access-set.pwn"
 #include "ini-misc.pwn"
 
-stock ini_open(filename[], len = sizeof filename) {
+stock ini_open(filename[]) {
 	if(ini_fileOpen) {
 		err("attempt to open ini while file already open", _s("filename", filename));
 		return INI_ERR_OPEN;
@@ -81,7 +81,7 @@ stock ini_open(filename[], len = sizeof filename) {
 		ini_recordsRead = 0;
 	}
 
-	_ini_strcpy(ini_fileName, filename, len);
+	_ini_strcpy(ini_fileName, filename, MAX_FILE_NAME);
 	ini_fileOpen = true;
 
 	return ret;
@@ -227,7 +227,7 @@ _ini_getIdx(key[], const cache[MAX_RECORDS][E_CACHE_STRUCT], records) {
 	return -1;
 }
 
-_ini_printCache(message[]) {
+stock _ini_printCache(message[]) {
 	log(message);
 	log("begin ini cache");
 	for(new i = 0, j = ini_recordsRead + ini_recordsAdded; i < j; ++i) {
