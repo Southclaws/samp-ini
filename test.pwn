@@ -1,4 +1,5 @@
 #define RUN_TESTS
+#define LIGHT_TEST_REPORT
 
 #include "ini.inc"
 #include <YSI\y_testing>
