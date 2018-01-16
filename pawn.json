@@ -3,9 +3,5 @@
     "repo": "samp-ini",
     "entry": "test.pwn",
     "output": "test.amx",
-    "dependencies": [
-        "Southclaws/samp-stdlib",
-        "Southclaws/samp-logger",
-        "Misiur/YSI-Includes"
-    ]
+    "dependencies": ["Southclaws/samp-stdlib", "Southclaws/samp-logger", "Misiur/YSI-Includes"]
 }

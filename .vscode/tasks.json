@@ -4,12 +4,12 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "sampctl package build",
+            "command": "sampctl package build --watch --verbose",
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "isBackground": false,
+            "isBackground": true,
             "presentation": {
                 "reveal": "silent",
                 "panel": "dedicated"
@@ -24,7 +24,12 @@
                         "severity": 3,
                         "message": 4
                     }
-                ]
+                ],
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": "watch-build: starting compilation",
+                    "endsPattern": "watch-build: finished"
+                }
             }
         }
     ]
