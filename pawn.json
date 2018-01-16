@@ -9,6 +9,6 @@
         "Misiur/YSI-Includes"
     ],
     "runtime": {
-        "run_type": "y_testing"
+        "mode": "y_testing"
     }
 }
