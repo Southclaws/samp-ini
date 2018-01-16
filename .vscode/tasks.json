@@ -4,7 +4,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "sampctl package build --watch --verbose",
+            "command": "sampctl package run --container --watch --verbose",
             "group": {
                 "kind": "build",
                 "isDefault": true
