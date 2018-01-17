@@ -7,4 +7,4 @@ install:
 script:
 - sampctl package ensure
 - sampctl package build
-- travis_wait sampctl package run
+- sampctl package run
