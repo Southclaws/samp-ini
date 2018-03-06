@@ -78,7 +78,7 @@ Test:SetNewInt() {
 	ASSERT(int == 1);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetNewInt.ini");
+	// fremove("SetNewInt.ini");
 }
 
 Test:SetExistingInt() {
@@ -103,7 +103,7 @@ Test:SetExistingInt() {
 	ASSERT(int == 1000);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetExistingInt.ini");
+	// fremove("SetExistingInt.ini");
 }
 
 Test:SetMultipleInts() {
@@ -135,7 +135,7 @@ Test:SetMultipleInts() {
 
 	ASSERT(ini_close() == 0);
 
-	fremove("SetMultipleInts.ini");
+	// fremove("SetMultipleInts.ini");
 }
 
 Test:SetNewFloat() {
@@ -155,7 +155,7 @@ Test:SetNewFloat() {
 	ASSERT(val == 1.5);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetNewFloat.ini");
+	// fremove("SetNewFloat.ini");
 }
 
 Test:SetExistingFloat() {
@@ -180,7 +180,7 @@ Test:SetExistingFloat() {
 	ASSERT(val == 1000.5);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetExistingFloat.ini");
+	// fremove("SetExistingFloat.ini");
 }
 
 Test:SetMultipleFloats() {
@@ -212,7 +212,7 @@ Test:SetMultipleFloats() {
 
 	ASSERT(ini_close() == 0);
 
-	fremove("SetMultipleFloats.ini");
+	// fremove("SetMultipleFloats.ini");
 }
 
 Test:SetNewString() {
@@ -232,7 +232,7 @@ Test:SetNewString() {
 	ASSERT(strcmp(val, "Value") == 0);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetNewString.ini");
+	// fremove("SetNewString.ini");
 }
 
 Test:SetExistingString() {
@@ -256,7 +256,7 @@ Test:SetExistingString() {
 	ASSERT(strcmp(val, "Valyew") == 0);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetExistingString.ini");
+	// fremove("SetExistingString.ini");
 }
 
 Test:SetMultipleStrings() {
@@ -288,7 +288,7 @@ Test:SetMultipleStrings() {
 
 	ASSERT(ini_close() == 0);
 
-	fremove("SetMultipleStrings.ini");
+	// fremove("SetMultipleStrings.ini");
 }
 
 Test:SetAndDelete() {
@@ -308,5 +308,5 @@ Test:SetAndDelete() {
 	ASSERT(ini_isKey("key") == 0);
 	ASSERT(ini_close() == 0);
 
-	fremove("SetAndDelete.ini");
+	// fremove("SetAndDelete.ini");
 }
