@@ -1,7 +1,14 @@
+// built-in include guard removal
+// just in case the user has a local dependency with the same file name
+#if defined _inc_ini
+	#undef _inc_ini
+#endif
+// custom include-guard to ensure we don't duplicate
 #if defined _ini_included
 	#endinput
 #endif
 #define _ini_included
+
 
 #include <a_samp>
 #include <logger>
