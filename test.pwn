@@ -14,53 +14,6 @@ Test:OpenNew() {
 	ASSERT(close_ret == 0);
 }
 
-makeRecord(k[], v[], d) {
-	new result[E_CACHE_STRUCT];
-	strcat(result[E_CACHE_KEY], k, MAX_KEY_LENGTH);
-	strcat(result[E_CACHE_VALUE], v, MAX_VAL_LENGTH);
-	result[E_CACHE_DELETED] = d;
-	return result;
-}
-
-new TEST_CACHE[MAX_RECORDS][E_CACHE_STRUCT];
-
-Test:BinarySearchSuccess() {
-	TEST_CACHE[0] = makeRecord("key1", "value1", 0);
-	TEST_CACHE[1] = makeRecord("key2", "value2", 0);
-	TEST_CACHE[2] = makeRecord("key3", "value3", 0);
-	TEST_CACHE[3] = makeRecord("key4", "value4", 0);
-	TEST_CACHE[4] = makeRecord("key5", "value5", 0);
-	TEST_CACHE[5] = makeRecord("key6", "value6", 0);
-	TEST_CACHE[6] = makeRecord("key7", "value7", 0);
-	TEST_CACHE[7] = makeRecord("key8", "value8", 0);
-	new records = 8;
-
-	ASSERT(_ini_getIdx("key1", TEST_CACHE, records) == 0);
-	ASSERT(_ini_getIdx("key2", TEST_CACHE, records) == 1);
-	ASSERT(_ini_getIdx("key3", TEST_CACHE, records) == 2);
-	ASSERT(_ini_getIdx("key4", TEST_CACHE, records) == 3);
-	ASSERT(_ini_getIdx("key5", TEST_CACHE, records) == 4);
-	ASSERT(_ini_getIdx("key6", TEST_CACHE, records) == 5);
-	ASSERT(_ini_getIdx("key7", TEST_CACHE, records) == 6);
-	ASSERT(_ini_getIdx("key8", TEST_CACHE, records) == 7);
-}
-
-Test:BinarySearchFail() {
-	TEST_CACHE[0] = makeRecord("key1", "value1", 0);
-	TEST_CACHE[1] = makeRecord("key2", "value2", 0);
-	TEST_CACHE[2] = makeRecord("key3", "value3", 0);
-	TEST_CACHE[3] = makeRecord("key4", "value4", 0);
-	TEST_CACHE[4] = makeRecord("key5", "value5", 0);
-	TEST_CACHE[5] = makeRecord("key6", "value6", 0);
-	TEST_CACHE[6] = makeRecord("key7", "value7", 0);
-	TEST_CACHE[7] = makeRecord("key8", "value8", 0);
-	new records = 8;
-
-	ASSERT(_ini_getIdx("KEY6", TEST_CACHE, records) == -1);
-	ASSERT(_ini_getIdx("key9", TEST_CACHE, records) == -1);
-	ASSERT(_ini_getIdx("", TEST_CACHE, records) == -1);
-}
-
 Test:SetNewInt() {
 	printf("\n\n- SetNewInt\n\n");
 
@@ -78,7 +31,7 @@ Test:SetNewInt() {
 	ASSERT(int == 1);
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetNewInt.ini");
+	fremove("SetNewInt.ini");
 }
 
 Test:SetExistingInt() {
@@ -103,7 +56,7 @@ Test:SetExistingInt() {
 	ASSERT(int == 1000);
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetExistingInt.ini");
+	fremove("SetExistingInt.ini");
 }
 
 Test:SetMultipleInts() {
@@ -135,7 +88,7 @@ Test:SetMultipleInts() {
 
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetMultipleInts.ini");
+	fremove("SetMultipleInts.ini");
 }
 
 Test:SetNewFloat() {
@@ -155,7 +108,7 @@ Test:SetNewFloat() {
 	ASSERT(val == 1.5);
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetNewFloat.ini");
+	fremove("SetNewFloat.ini");
 }
 
 Test:SetExistingFloat() {
@@ -180,7 +133,7 @@ Test:SetExistingFloat() {
 	ASSERT(val == 1000.5);
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetExistingFloat.ini");
+	fremove("SetExistingFloat.ini");
 }
 
 Test:SetMultipleFloats() {
@@ -212,7 +165,7 @@ Test:SetMultipleFloats() {
 
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetMultipleFloats.ini");
+	fremove("SetMultipleFloats.ini");
 }
 
 Test:SetNewString() {
@@ -232,7 +185,7 @@ Test:SetNewString() {
 	ASSERT(strcmp(val, "Value") == 0);
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetNewString.ini");
+	fremove("SetNewString.ini");
 }
 
 Test:SetExistingString() {
@@ -256,7 +209,7 @@ Test:SetExistingString() {
 	ASSERT(strcmp(val, "Valyew") == 0);
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetExistingString.ini");
+	fremove("SetExistingString.ini");
 }
 
 Test:SetMultipleStrings() {
@@ -288,7 +241,7 @@ Test:SetMultipleStrings() {
 
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetMultipleStrings.ini");
+	fremove("SetMultipleStrings.ini");
 }
 
 Test:SetAndDelete() {
@@ -308,5 +261,5 @@ Test:SetAndDelete() {
 	ASSERT(ini_isKey("key") == 0);
 	ASSERT(ini_close() == 0);
 
-	// fremove("SetAndDelete.ini");
+	fremove("SetAndDelete.ini");
 }

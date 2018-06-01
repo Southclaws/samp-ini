@@ -11,7 +11,7 @@
             },
             "isBackground": false,
             "presentation": {
-                "reveal": "silent",
+                "reveal": "never",
                 "panel": "dedicated"
             },
             "problemMatcher": "$sampctl"
@@ -22,10 +22,6 @@
             "command": "sampctl package build --watch",
             "group": "build",
             "isBackground": true,
-            "presentation": {
-                "reveal": "silent",
-                "panel": "dedicated"
-            },
             "problemMatcher": "$sampctl"
         },
         {
@@ -38,7 +34,7 @@
             },
             "isBackground": true,
             "presentation": {
-                "reveal": "silent",
+                "reveal": "never",
                 "panel": "dedicated"
             },
             "problemMatcher": "$sampctl"
@@ -50,7 +46,7 @@
             "group": "test",
             "isBackground": true,
             "presentation": {
-                "reveal": "silent",
+                "reveal": "never",
                 "panel": "dedicated"
             },
             "problemMatcher": "$sampctl"

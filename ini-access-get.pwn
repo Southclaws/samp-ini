@@ -3,13 +3,10 @@ stock ini_getString(key[], dest[], len = sizeof(dest)) {
 		return INI_ERR_NOT_OPEN;
 	}
 
-	new idx = _ini_getIdx(key, ini_cache, ini_recordsRead);
-
-	if(idx == -1) {
+	if(!MAP_contains_str(ini_cache, key)) {
 		return INI_ERR_NO_KEY;
 	}
-
-	_ini_strcpy(dest, ini_cache[idx][E_CACHE_VALUE], len);
+	MAP_get_str_arr(ini_cache, key, dest, len);
 
 	return 0;
 }
@@ -19,13 +16,13 @@ stock ini_getInt(key[], &dest) {
 		return INI_ERR_NOT_OPEN;
 	}
 
-	new idx = _ini_getIdx(key, ini_cache, ini_recordsRead);
-
-	if(idx == -1) {
+	new str[12];
+	if(!MAP_contains_str(ini_cache, key)) {
 		return INI_ERR_NO_KEY;
 	}
+	MAP_get_str_arr(ini_cache, key, str);
 
-	dest = strval(ini_cache[idx][E_CACHE_VALUE]);
+	dest = strval(str);
 
 	return 0;
 }
@@ -35,13 +32,13 @@ stock ini_getFloat(key[], &Float:dest) {
 		return INI_ERR_NOT_OPEN;
 	}
 
-	new idx = _ini_getIdx(key, ini_cache, ini_recordsRead);
-
-	if(idx == -1) {
+	new str[12];
+	if(!MAP_contains_str(ini_cache, key)) {
 		return INI_ERR_NO_KEY;
 	}
+	MAP_get_str_arr(ini_cache, key, str);
 
-	dest = floatstr(ini_cache[idx][E_CACHE_VALUE]);
+	dest = floatstr(str);
 
 	return 0;
 }

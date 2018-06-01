@@ -12,6 +12,7 @@
 
 #include <a_samp>
 #include <logger>
+#include <map>
 
 
 #define MAX_FILE_NAME       (256)
@@ -53,9 +54,7 @@ enum E_CACHE_STRUCT {
 
 new
 	ini_fileName[MAX_FILE_NAME],
-	ini_cache[MAX_RECORDS][E_CACHE_STRUCT],
-	ini_recordsRead, // the amount of records read when parsing
-	ini_recordsAdded, // the amount of new records written
+	Map:ini_cache,
 	bool:ini_fileOpen;
 
 #include "ini-parser.pwn"
@@ -81,11 +80,10 @@ stock ini_open(filename[]) {
 			return INI_ERR_IO_FAIL;
 		}
 
-		ret = ini_parse(handle, ini_recordsRead);
+		ret = ini_parse(handle, ini_cache);
 		fclose(handle);
 	} else {
 		dbg("ini", "opened new file", _s("filename", filename));
-		ini_recordsRead = 0;
 	}
 
 	_ini_strcpy(ini_fileName, filename, MAX_FILE_NAME);
@@ -106,7 +104,7 @@ stock ini_commit() {
 		return INI_ERR_IO_FAIL;
 	}
 
-	new ret = ini_write(handle, ini_recordsRead + ini_recordsAdded);
+	new ret = ini_write(handle, ini_cache);
 	fclose(handle);
 
 	dbg("ini", "comitted file");
@@ -122,8 +120,6 @@ stock ini_close() {
 	}
 
 	ini_fileOpen = false;
-	ini_recordsRead = 0;
-	ini_recordsAdded = 0;
 
 	dbg("ini", "closed file");
 
@@ -139,7 +135,7 @@ stock ini_isKey(key[]) {
 		return false;
 	}
 
-	return _ini_getIdx(key, ini_cache, ini_recordsRead) != -1;
+	return MAP_contains_str(ini_cache, key);
 }
 
 stock ini_remove(key[]) {
@@ -147,91 +143,13 @@ stock ini_remove(key[]) {
 		return INI_ERR_NOT_OPEN;
 	}
 
-	new idx = _ini_getIdx(key, ini_cache, ini_recordsRead);
-
-	if(idx == -1) {
+	if(!MAP_contains_str(ini_cache, key)) {
 		return INI_ERR_NO_KEY;
 	}
 
-	ini_cache[idx][E_CACHE_DELETED] = true;
+	MAP_remove_str(ini_cache, key);
 
 	return 0;
-}
-
-_ini_sortByKey(left, right) {
-	new
-		tmp_left = left,
-		tmp_right = right,
-		pivot = (left + right) / 2;
-
-	while(tmp_left <= tmp_right) {
-		while(strcmp(ini_cache[tmp_left][E_CACHE_KEY], ini_cache[pivot][E_CACHE_KEY]) < 0) {
-			tmp_left++;
-		}
-		while(strcmp(ini_cache[tmp_left][E_CACHE_KEY], ini_cache[pivot][E_CACHE_KEY]) > 0) {
-			tmp_right--;
-		}
-		if(tmp_left <= tmp_right) {
-			_ini_swap(tmp_left, tmp_right);
-			tmp_left++;
-			tmp_right--;
-		}
-	}
-
-	if(left < tmp_right) {
-		_ini_sortByKey(left, tmp_right);
-	}
-
-	if(tmp_left < right) {
-		_ini_sortByKey(tmp_left, right);
-	}
-}
-
-_ini_swap(left, right) {
-	new tmp[E_CACHE_STRUCT];
-
-	_ini_strcpy(tmp[E_CACHE_KEY], ini_cache[left][E_CACHE_KEY], MAX_KEY_LENGTH);
-	_ini_strcpy(tmp[E_CACHE_VALUE], ini_cache[left][E_CACHE_VALUE], MAX_VAL_LENGTH);
-
-	_ini_strcpy(ini_cache[left][E_CACHE_KEY], ini_cache[right][E_CACHE_KEY], MAX_KEY_LENGTH);
-	_ini_strcpy(ini_cache[left][E_CACHE_VALUE], ini_cache[right][E_CACHE_VALUE], MAX_VAL_LENGTH);
-
-	_ini_strcpy(ini_cache[right][E_CACHE_KEY], ini_cache[left][E_CACHE_KEY], MAX_KEY_LENGTH);
-	_ini_strcpy(ini_cache[right][E_CACHE_VALUE], ini_cache[left][E_CACHE_VALUE], MAX_VAL_LENGTH);
-
-	if(ini_cache[left][E_CACHE_DELETED] != ini_cache[right][E_CACHE_DELETED]) {
-		ini_cache[left][E_CACHE_DELETED] ^= ini_cache[right][E_CACHE_DELETED];
-		ini_cache[right][E_CACHE_DELETED] ^= ini_cache[left][E_CACHE_DELETED];
-		ini_cache[left][E_CACHE_DELETED] ^= ini_cache[right][E_CACHE_DELETED];
-	}
-}
-
-_ini_getIdx(key[], const cache[MAX_RECORDS][E_CACHE_STRUCT], records) {
-	if(_ini_isNull(key)) {
-		return -1;
-	}
-
-	new
-		comp,
-		start,
-		middle,
-		end = records - 1;
-
-	while(start <= end) {
-		middle = ((start + end) / 2);
-
-		comp = strcmp(key, cache[middle][E_CACHE_KEY], false, MAX_KEY_LENGTH);
-
-		if(comp == 0) {
-			return middle;
-		} else if(comp < 0) {
-			end = middle - 1;
-		} else {
-			start = middle + 1;
-		}
-	}
-
-	return -1;
 }
 
 stock _ini_printCache(message[]) {

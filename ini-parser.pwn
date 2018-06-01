@@ -1,10 +1,13 @@
 // parse the given file handle as key=value format writing output to the given destinations
-ini_parse(File:handle, &records) {
+stock ini_parse(File:handle, &Map:map) {
 	new
 		endline,
 		delim,
 		offset,
-		buffer[MAX_RECORD_LENGTH];
+		buffer[MAX_RECORD_LENGTH],
+		key[MAX_KEY_LENGTH],
+		val[MAX_VAL_LENGTH],
+		records;
 
 	while(fread(handle, buffer) && (records < MAX_RECORDS)) {
 
@@ -40,7 +43,7 @@ ini_parse(File:handle, &records) {
 				offset--;
 			}
 
-			_ini_strcpy(ini_cache[records][E_CACHE_KEY], buffer, delim + offset + 1);
+			_ini_strcpy(key, buffer, delim + offset + 1);
 
 			offset = 0;
 			while(offset < MAX_VAL_LENGTH) {
@@ -55,14 +58,14 @@ ini_parse(File:handle, &records) {
 				offset++;
 			}
 
-			_ini_strcpy(ini_cache[records][E_CACHE_VALUE], buffer[delim + offset], MAX_VAL_LENGTH);
-			ini_cache[records][E_CACHE_DELETED] = false;
+			_ini_strcpy(val, buffer[delim + offset], MAX_VAL_LENGTH);
 
 			dbg("ini", "read record",
 				_i("record", records),
-				_s("key", ini_cache[records][E_CACHE_KEY]),
-				_s("value", ini_cache[records][E_CACHE_VALUE]));
-
+				_s("key", key),
+				_s("value", val));
+			
+			MAP_insert_str_str(map, key, val);
 			records++;
 		}
 	}

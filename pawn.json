@@ -1,14 +1,18 @@
 {
-    "user": "Southclaws",
-    "repo": "samp-ini",
-    "entry": "test.pwn",
-    "output": "test.amx",
-    "dependencies": [
-        "Southclaws/samp-stdlib",
-        "Southclaws/samp-logger",
-        "Misiur/YSI-Includes"
-    ],
-    "runtime": {
-        "mode": "y_testing"
-    }
+	"user": "Southclaws",
+	"repo": "samp-ini",
+	"entry": "test.pwn",
+	"output": "test.amx",
+	"dependencies": [
+		"Southclaws/samp-stdlib",
+		"Southclaws/samp-logger",
+		"Misiur/YSI-Includes",
+		"BigETI/pawn-map"
+	],
+	"runtime": {
+		"version": "0.3.7",
+		"mode": "y_testing",
+		"rcon_password": "password",
+		"port": 7777
+	}
 }
