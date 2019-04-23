@@ -1,4 +1,4 @@
-stock ini_getString(key[], dest[], len = sizeof(dest)) {
+stock ini_getString(const key[], dest[], len = sizeof(dest)) {
 	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}
@@ -11,7 +11,7 @@ stock ini_getString(key[], dest[], len = sizeof(dest)) {
 	return 0;
 }
 
-stock ini_getInt(key[], &dest) {
+stock ini_getInt(const key[], &dest) {
 	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}
@@ -27,7 +27,7 @@ stock ini_getInt(key[], &dest) {
 	return 0;
 }
 
-stock ini_getFloat(key[], &Float:dest) {
+stock ini_getFloat(const key[], &Float:dest) {
 	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}

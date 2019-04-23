@@ -31,20 +31,20 @@ enum {
 	INI_ERR_NO_KEY
 }
 
-forward ini_open(filename[]);
+forward ini_open(const filename[]);
 forward ini_commit();
 forward ini_close();
 forward ini_isOpen();
-forward ini_isKey(key[]);
-forward ini_remove(key[]);
+forward ini_isKey(const key[]);
+forward ini_remove(const key[]);
 
-forward ini_getString(key[], dest[], len = sizeof(dest));
-forward ini_getInt(key[], &dest);
-forward ini_getFloat(key[], &Float:dest);
+forward ini_getString(const key[], dest[], len = sizeof(dest));
+forward ini_getInt(const key[], &dest);
+forward ini_getFloat(const key[], &Float:dest);
 
-forward ini_setString(key[], value[]);
-forward ini_setInt(key[], value);
-forward ini_setFloat(key[], Float:value);
+forward ini_setString(const key[], const value[]);
+forward ini_setInt(const key[], value);
+forward ini_setFloat(const key[], Float:value);
 
 enum E_CACHE_STRUCT {
 	E_CACHE_KEY[MAX_KEY_LENGTH],
@@ -63,7 +63,7 @@ new
 #include "ini-access-set.pwn"
 #include "ini-misc.pwn"
 
-stock ini_open(filename[]) {
+stock ini_open(const filename[]) {
 	if(ini_fileOpen) {
 		err("attempt to open ini while file already open", _s("filename", filename));
 		return INI_ERR_OPEN;
@@ -130,7 +130,7 @@ stock ini_isOpen() {
 	return ini_fileOpen;
 }
 
-stock ini_isKey(key[]) {
+stock ini_isKey(const key[]) {
 	if(!ini_isOpen()) {
 		return false;
 	}
@@ -138,7 +138,7 @@ stock ini_isKey(key[]) {
 	return MAP_contains_str(ini_cache, key);
 }
 
-stock ini_remove(key[]) {
+stock ini_remove(const key[]) {
 	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}
@@ -152,7 +152,7 @@ stock ini_remove(key[]) {
 	return 0;
 }
 
-stock _ini_printCache(message[]) {
+stock _ini_printCache(const message[]) {
 	log(message);
 	log("begin ini cache");
 	for(new i = 0, j = ini_recordsRead + ini_recordsAdded; i < j; ++i) {

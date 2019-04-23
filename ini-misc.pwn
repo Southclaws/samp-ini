@@ -5,7 +5,7 @@ stock _ini_strcpy(dest[], const source[], maxlength = sizeof dest) {
 }
 
 // isNull returns true if a string is empty
-stock _ini_isNull(string[]) {
+stock _ini_isNull(const string[]) {
 	return (
 		string[0] == 0 || 
 		(string[0] == 1 && string[1] == 0)
