@@ -1,4 +1,4 @@
-stock ini_setString(key[], value[]) {
+stock ini_setString(const key[], const value[]) {
 	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}
@@ -8,7 +8,7 @@ stock ini_setString(key[], value[]) {
 	return 0;
 }
 
-stock ini_setInt(key[], value) {
+stock ini_setInt(const key[], value) {
 	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}
@@ -20,7 +20,7 @@ stock ini_setInt(key[], value) {
 	return 0;
 }
 
-stock ini_setFloat(key[], Float:value) {
+stock ini_setFloat(const key[], Float:value) {
 	if(!ini_isOpen()) {
 		return INI_ERR_NOT_OPEN;
 	}
