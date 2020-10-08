@@ -65,25 +65,25 @@ new
 
 stock ini_open(const filename[]) {
 	if(ini_fileOpen) {
-		err("attempt to open ini while file already open", _s("filename", filename));
+		Logger_Err("attempt to open ini while file already open", Logger_S("filename", filename));
 		return INI_ERR_OPEN;
 	}
 
 	new ret;
 
 	if(fexist(filename)) {
-		dbg("ini", "opened existing file", _s("filename", filename));
+		Logger_Dbg("ini", "opened existing file", Logger_S("filename", filename));
 
 		new File:handle = fopen(filename, io_read);
 		if(!handle) {
-			err("failed to open file for reading", _s("filename", filename));
+			Logger_Err("failed to open file for reading", Logger_S("filename", filename));
 			return INI_ERR_IO_FAIL;
 		}
 
 		ret = ini_parse(handle, ini_cache);
 		fclose(handle);
 	} else {
-		dbg("ini", "opened new file", _s("filename", filename));
+		Logger_Dbg("ini", "opened new file", Logger_S("filename", filename));
 	}
 
 	_ini_strcpy(ini_fileName, filename, MAX_FILE_NAME);
@@ -94,20 +94,20 @@ stock ini_open(const filename[]) {
 
 stock ini_commit() {
 	if(!ini_fileOpen) {
-		err("attempt to commit ini with no open file");
+		Logger_Err("attempt to commit ini with no open file");
 		return INI_ERR_NOT_OPEN;
 	}
 
 	new File:handle = fopen(ini_fileName, io_write);
 	if(!handle) {
-		err("failed to open file for writing", _s("filename", ini_fileName));
+		Logger_Err("failed to open file for writing", Logger_S("filename", ini_fileName));
 		return INI_ERR_IO_FAIL;
 	}
 
 	new ret = ini_write(handle, ini_cache);
 	fclose(handle);
 
-	dbg("ini", "comitted file");
+	Logger_Dbg("ini", "comitted file");
 
 	ini_close();
 
@@ -121,7 +121,7 @@ stock ini_close() {
 
 	ini_fileOpen = false;
 
-	dbg("ini", "closed file");
+	Logger_Dbg("ini", "closed file");
 
 	return 0;
 }
@@ -153,14 +153,14 @@ stock ini_remove(const key[]) {
 }
 
 stock _ini_printCache(const message[]) {
-	log(message);
-	log("begin ini cache");
+	Logger_Log(message);
+	Logger_Log("begin ini cache");
 	for(new i = 0, j = ini_recordsRead + ini_recordsAdded; i < j; ++i) {
-		log("--record",
-			_i("index", i),
-			_i("deleted", ini_cache[i][E_CACHE_DELETED]),
-			_s("key", ini_cache[i][E_CACHE_KEY]),
-			_s("value", ini_cache[i][E_CACHE_VALUE]));
+		Logger_Log("--record",
+			Logger_I("index", i),
+			Logger_I("deleted", ini_cache[i][E_CACHE_DELETED]),
+			Logger_S("key", ini_cache[i][E_CACHE_KEY]),
+			Logger_S("value", ini_cache[i][E_CACHE_VALUE]));
 	}
-	log("end ini cache");
+	Logger_Log("end ini cache");
 }
